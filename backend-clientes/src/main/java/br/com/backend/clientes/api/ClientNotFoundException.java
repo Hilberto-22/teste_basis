@@ -1,4 +1,4 @@
-package br.com.backend.clientes.application.client;
+package br.com.backend.clientes.api;
 
 public class ClientNotFoundException extends RuntimeException {
 

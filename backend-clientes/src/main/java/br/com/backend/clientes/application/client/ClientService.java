@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import br.com.backend.clientes.api.ClientNotFoundException;
 import br.com.backend.clientes.domain.client.BrazilianState;
 import br.com.backend.clientes.domain.client.Client;
 import br.com.backend.clientes.domain.dto.ClientCardResponse;
