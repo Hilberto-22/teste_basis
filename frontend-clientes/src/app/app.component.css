@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+.pagina-principal {
+  min-height: 100vh;
+}
+
+.valor-resumo {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.cartao-cliente {
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cartao-cliente:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--bs-box-shadow-sm);
+}
+
+.cartao-cliente.is-active {
+  border-color: var(--bs-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+}
+
+.avatar-cliente {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+
+.avatar-detalhe {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 64px;
+  height: 64px;
+}
+
+.avatar-placeholder-grande {
+  width: 88px;
+  height: 88px;
+}
+
+.detalhes-fixos {
+  position: sticky;
+  top: 1.5rem;
+}
+
+@media (max-width: 1199.98px) {
+  .detalhes-fixos {
+    position: static;
+  }
+}

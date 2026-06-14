@@ -1,0 +1,118 @@
+{
+  "results": [
+    {
+      "gender": "female",
+      "name": {
+        "title": "mrs",
+        "first": "alejandra",
+        "last": "rodrigues"
+      },
+      "location": {
+        "street": "3833 rua santa catarina",
+        "city": "umuarama",
+        "state": "santa catarina",
+        "postcode": 43646,
+        "coordinates": {
+          "latitude": "-50.7186",
+          "longitude": "-20.4596"
+        },
+        "timezone": {
+          "offset": "+3:00",
+          "description": "Baghdad, Riyadh, Moscow, St. Petersburg"
+        }
+      },
+      "email": "alejandra.rodrigues@example.com",
+      "dob": {
+        "date": "1974-05-16T14:46:15Z",
+        "age": 44
+      },
+      "registered": {
+        "date": "2013-03-06T16:09:16Z",
+        "age": 5
+      },
+      "phone": "(09) 7033-7406",
+      "cell": "(54) 3190-3469",
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/18.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/18.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/18.jpg"
+      }
+    },
+    {
+      "gender": "female",
+      "name": {
+        "title": "ms",
+        "first": "ana",
+        "last": "souza"
+      },
+      "location": {
+        "street": "100 avenida paulista",
+        "city": "sao paulo",
+        "state": "sao paulo",
+        "postcode": 10101,
+        "coordinates": {
+          "latitude": "-23.5614",
+          "longitude": "-46.6559"
+        },
+        "timezone": {
+          "offset": "-3:00",
+          "description": "Brasilia"
+        }
+      },
+      "email": "ana.souza@example.com",
+      "dob": {
+        "date": "1990-01-01T10:00:00Z",
+        "age": 34
+      },
+      "registered": {
+        "date": "2018-02-10T10:00:00Z",
+        "age": 6
+      },
+      "phone": "(11) 1111-1111",
+      "cell": "(11) 9999-9999",
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/20.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/20.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/20.jpg"
+      }
+    },
+    {
+      "gender": "male",
+      "name": {
+        "title": "mr",
+        "first": "bruno",
+        "last": "silva"
+      },
+      "location": {
+        "street": "55 rua das flores",
+        "city": "niteroi",
+        "state": "rio de janeiro",
+        "postcode": 20202,
+        "coordinates": {
+          "latitude": "-22.8832",
+          "longitude": "-43.1034"
+        },
+        "timezone": {
+          "offset": "-3:00",
+          "description": "Brasilia"
+        }
+      },
+      "email": "bruno.silva@example.com",
+      "dob": {
+        "date": "1988-03-21T08:30:00Z",
+        "age": 36
+      },
+      "registered": {
+        "date": "2019-09-01T12:00:00Z",
+        "age": 4
+      },
+      "phone": "(21) 2222-2222",
+      "cell": "(21) 98888-7777",
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/21.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/21.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/21.jpg"
+      }
+    }
+  ]
+}

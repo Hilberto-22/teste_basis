@@ -1,0 +1,327 @@
+<main class="pagina-principal py-4 py-lg-5">
+  <div class="container">
+    <section class="row g-3 mb-4">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-4">
+            <h1 class="h2 mb-3">{{ titulo }}</h1>
+            <p class="text-body-secondary mb-0">
+              Consulte a base de clientes, filtre por UF, pesquise por nome e abra os
+              detalhes completos de cada cadastro.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="row g-3">
+          <div class="col-6 col-lg-12 col-xxl-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body">
+                <div class="text-body-secondary small mb-1">Clientes encontrados</div>
+                <div class="valor-resumo fw-bold">{{ totalItens }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6 col-lg-12 col-xxl-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body">
+                <div class="text-body-secondary small mb-1">Pagina atual</div>
+                <div class="valor-resumo fw-bold">{{ paginaAtual }}/{{ totalPaginas }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="row g-4 align-items-start">
+      <div class="col-xl-8">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" for="busca-input">Buscar por nome</label>
+                <input
+                  id="busca-input"
+                  type="search"
+                  class="form-control"
+                  [ngModel]="termoBusca"
+                  (ngModelChange)="aoAlterarBusca($event)"
+                  placeholder="Ex.: Ana"
+                />
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-semibold" for="estado-select">Filtrar por UF</label>
+                <select
+                  id="estado-select"
+                  class="form-select"
+                  [ngModel]="estadoSelecionado"
+                  (ngModelChange)="aoAlterarEstado($event)"
+                >
+                  <option value="">Todas as UFs</option>
+                  @for (estado of estados; track estado.sigla) {
+                    <option [value]="estado.sigla">{{ estado.sigla }} - {{ estado.nome }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-md-2 d-grid">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="limparFiltros()"
+                  [disabled]="!possuiFiltrosAtivos"
+                >
+                  Limpar
+                </button>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mt-4 mb-3">
+              @if (totalItens > 0) {
+                <p class="text-body-secondary mb-0">
+                  Exibindo <strong>{{ inicioPagina }}-{{ fimPagina }}</strong> de
+                  <strong>{{ totalItens }}</strong> clientes.
+                </p>
+              } @else {
+                <p class="text-body-secondary mb-0">Nenhum cliente encontrado.</p>
+              }
+
+              <p class="text-body-secondary mb-0">Clique em um card para visualizar os detalhes.</p>
+            </div>
+
+            @if (erroLista) {
+              <div class="alert alert-danger mb-0" role="alert">
+                <h2 class="h6 mb-1">Falha ao carregar clientes</h2>
+                <p class="mb-0">{{ erroLista }}</p>
+              </div>
+            } @else if (estaCarregandoLista) {
+              <div class="row g-3">
+                @for (cartao of cartoesEsqueleto; track cartao) {
+                  <div class="col-md-6 col-xl-4">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                          <span class="placeholder rounded-circle flex-shrink-0 avatar-placeholder"></span>
+                          <div class="w-100">
+                            <div class="placeholder-glow mb-2">
+                              <span class="placeholder col-8"></span>
+                            </div>
+                            <div class="placeholder-glow">
+                              <span class="placeholder col-10"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="placeholder-glow mb-2">
+                          <span class="placeholder col-4"></span>
+                        </div>
+                        <div class="placeholder-glow mb-2">
+                          <span class="placeholder col-7"></span>
+                        </div>
+                        <div class="placeholder-glow">
+                          <span class="placeholder col-5"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else if (!clientes.length) {
+              <div class="alert alert-light border mb-0" role="alert">
+                <h2 class="h6 mb-1">Sem resultados para os filtros atuais</h2>
+                <p class="mb-0">Tente remover a busca ou escolher outra UF para ampliar a listagem.</p>
+              </div>
+            } @else {
+              <div class="row g-3">
+                @for (cliente of clientes; track cliente.id) {
+                  <div class="col-md-6 col-xl-4">
+                    <button
+                      type="button"
+                      class="card cartao-cliente text-start border h-100 w-100"
+                      [class.is-active]="cliente.id === idClienteSelecionado"
+                      (click)="selecionarCliente(cliente)"
+                    >
+                      <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                          <img
+                            class="rounded-circle flex-shrink-0 avatar-cliente"
+                            [src]="cliente.urlFoto"
+                            [alt]="'Foto de ' + cliente.nome"
+                            loading="lazy"
+                          />
+
+                          <div class="min-w-0">
+                            <h2 class="h6 mb-1">{{ cliente.nome }}</h2>
+                            <p class="text-body-secondary small mb-0 text-break">{{ cliente.email }}</p>
+                          </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+                          <span class="badge text-bg-primary">{{ cliente.siglaEstado }}</span>
+                          <span class="text-body-secondary small">{{ cliente.cidade }}</span>
+                        </div>
+
+                        <p class="fw-semibold mb-3">{{ cliente.estado }}</p>
+                        <span class="text-primary fw-semibold">Abrir detalhes</span>
+                      </div>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-4">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="alterarPagina(paginaAtual - 1)"
+                [disabled]="paginaAtual === 1 || estaCarregandoLista"
+              >
+                Anterior
+              </button>
+
+              <nav aria-label="Paginas">
+                <ul class="pagination pagination-sm mb-0">
+                  @for (pagina of paginasVisiveis; track pagina) {
+                    <li class="page-item" [class.active]="pagina === paginaAtual">
+                      <button
+                        type="button"
+                        class="page-link"
+                        [attr.aria-current]="pagina === paginaAtual ? 'page' : null"
+                        (click)="alterarPagina(pagina)"
+                        [disabled]="estaCarregandoLista"
+                      >
+                        {{ pagina }}
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </nav>
+
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="alterarPagina(paginaAtual + 1)"
+                [disabled]="paginaAtual === totalPaginas || estaCarregandoLista"
+              >
+                Proxima
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="col-xl-4">
+        <div class="card border-0 shadow-sm detalhes-fixos">
+          <div class="card-body p-4">
+            <p class="text-uppercase text-primary fw-semibold small mb-2">Detalhes do cliente</p>
+            <h2 class="h4 mb-4">
+              @if (clienteSelecionado) {
+                {{ clienteSelecionado.nome }}
+              } @else {
+                Selecione um cadastro
+              }
+            </h2>
+
+            @if (estaCarregandoDetalhes) {
+              <div class="d-flex align-items-center gap-3 mb-4">
+                <span class="placeholder rounded-circle flex-shrink-0 avatar-placeholder avatar-placeholder-grande"></span>
+                <div class="w-100">
+                  <div class="placeholder-glow mb-2">
+                    <span class="placeholder col-8"></span>
+                  </div>
+                  <div class="placeholder-glow">
+                    <span class="placeholder col-10"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="placeholder-glow mb-2">
+                <span class="placeholder col-12"></span>
+              </div>
+              <div class="placeholder-glow mb-2">
+                <span class="placeholder col-9"></span>
+              </div>
+              <div class="placeholder-glow mb-2">
+                <span class="placeholder col-10"></span>
+              </div>
+              <div class="placeholder-glow">
+                <span class="placeholder col-7"></span>
+              </div>
+            } @else if (erroDetalhes) {
+              <div class="alert alert-danger mb-0" role="alert">
+                <h2 class="h6 mb-1">Falha ao carregar detalhes</h2>
+                <p class="mb-0">{{ erroDetalhes }}</p>
+              </div>
+            } @else if (clienteSelecionado) {
+              <div class="d-flex align-items-center gap-3 p-3 rounded bg-body-tertiary mb-4">
+                <img
+                  class="rounded-circle flex-shrink-0 avatar-detalhe"
+                  [src]="clienteSelecionado.urlFoto"
+                  [alt]="'Foto de ' + clienteSelecionado.nome"
+                />
+
+                <div class="min-w-0">
+                  <span class="badge text-bg-primary mb-2">{{ clienteSelecionado.siglaEstado }}</span>
+                  <p class="text-body-secondary mb-0 text-break">{{ clienteSelecionado.email }}</p>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12">
+                  <div class="border rounded-3 p-3 bg-body-tertiary">
+                    <div class="text-uppercase text-body-secondary small fw-semibold mb-1">Endereco</div>
+                    <div class="fw-medium">{{ clienteSelecionado.endereco }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="border rounded-3 p-3 bg-body-tertiary h-100">
+                    <div class="text-uppercase text-body-secondary small fw-semibold mb-1">Cidade</div>
+                    <div class="fw-medium">{{ clienteSelecionado.cidade }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="border rounded-3 p-3 bg-body-tertiary h-100">
+                    <div class="text-uppercase text-body-secondary small fw-semibold mb-1">Estado</div>
+                    <div class="fw-medium">{{ clienteSelecionado.estado }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="border rounded-3 p-3 bg-body-tertiary h-100">
+                    <div class="text-uppercase text-body-secondary small fw-semibold mb-1">CEP</div>
+                    <div class="fw-medium">{{ clienteSelecionado.cep }}</div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="border rounded-3 p-3 bg-body-tertiary h-100">
+                    <div class="text-uppercase text-body-secondary small fw-semibold mb-1">Telefone</div>
+                    <div class="fw-medium">{{ clienteSelecionado.telefone }}</div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="border rounded-3 p-3 bg-body-tertiary">
+                    <div class="text-uppercase text-body-secondary small fw-semibold mb-1">Celular</div>
+                    <div class="fw-medium">{{ clienteSelecionado.celular }}</div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="alert alert-light border mb-0" role="alert">
+                <h2 class="h6 mb-1">Nenhum cliente selecionado</h2>
+                <p class="mb-0">Escolha um card na lista para abrir o endereco, cidade, estado e CEP.</p>
+              </div>
+            }
+          </div>
+        </div>
+      </aside>
+    </section>
+  </div>
+</main>
