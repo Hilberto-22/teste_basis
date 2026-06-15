@@ -90,8 +90,8 @@ public class ClientJsonGateway {
     }
 
     private void atribuirId(Client client) {
-        String semente = client.getEmail() + "|" + client.getRegistered().getDate();
-        String idGerado = UUID.nameUUIDFromBytes(semente.getBytes(StandardCharsets.UTF_8)).toString();
+        String random = client.getEmail() + "|" + client.getRegistered().getDate();
+        String idGerado = UUID.nameUUIDFromBytes(random.getBytes(StandardCharsets.UTF_8)).toString();
         client.setId(idGerado);
     }
 }
