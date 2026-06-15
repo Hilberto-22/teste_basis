@@ -1,9 +1,5 @@
 package br.com.backend.clientes.api;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -12,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = "clients.source-url=classpath:clients-test.json")
 @AutoConfigureMockMvc
@@ -56,6 +55,33 @@ class ClientControllerTest {
                 .andExpect(jsonPath("$.message").value("O parametro 'page' deve ser maior ou igual a 1."));
     }
 
+    @Test
+    void deveRetornarListagemVaziaQuandoNenhumClienteCorresponderAosFiltros() throws Exception {
+        mockMvc.perform(get("/api/clients")
+                        .queryParam("state", "XX")
+                        .queryParam("name", "inexistente"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").value(0))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void deveRetornarNotFoundQuandoBuscarClientePorIdInexistente() throws Exception {
+        String idInexistente = UUID.randomUUID().toString();
+
+        mockMvc.perform(get("/api/clients/{id}", idInexistente))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Cliente com id '" + idInexistente + "' nao foi encontrado."));
+    }
+
+    @Test
+    void deveRetornarBadRequestQuandoOParametroPageForMenorQue1() throws Exception {
+        mockMvc.perform(get("/api/clients")
+                        .queryParam("page", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("O parametro 'page' deve ser maior ou igual a 1."));
+    }
+
     private String gerarId(String email, String registeredDate) {
         String semente = email + "|" + registeredDate;
         return UUID.nameUUIDFromBytes(semente.getBytes(StandardCharsets.UTF_8)).toString();
@@ -64,32 +90,5 @@ class ClientControllerTest {
     public static String gerarIdParaTeste(String email, String registeredDate) {
         String semente = email + "|" + registeredDate;
         return UUID.nameUUIDFromBytes(semente.getBytes(StandardCharsets.UTF_8)).toString();
-    }
-
-    public String deveRetornarListagemVaziaQuandoNenhumClienteCorresponderAosFiltros() throws Exception {
-        mockMvc.perform(get("/api/clients")
-                        .queryParam("state", "XX")
-                        .queryParam("name", "inexistente"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value(0))
-                .andExpect(jsonPath("$.data").isEmpty());
-        return null;
-    }
-
-    public String deveRetornarNotFoundQuandoBuscarClientePorIdInexistente() throws Exception {
-        String idInexistente = UUID.randomUUID().toString();
-
-        mockMvc.perform(get("/api/clients/{id}", idInexistente))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Cliente com ID " + idInexistente + " nao encontrado."));
-        return null;
-    }
-
-    public String deveRetornarBadRequestQuandoOParametroPageForMenorQue1() throws Exception {
-        mockMvc.perform(get("/api/clients")
-                        .queryParam("page", "0"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("O parametro 'page' deve ser maior ou igual a 1."));
-        return null;
     }
 }
