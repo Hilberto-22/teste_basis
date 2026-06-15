@@ -60,4 +60,36 @@ class ClientControllerTest {
         String semente = email + "|" + registeredDate;
         return UUID.nameUUIDFromBytes(semente.getBytes(StandardCharsets.UTF_8)).toString();
     }
+
+    public static String gerarIdParaTeste(String email, String registeredDate) {
+        String semente = email + "|" + registeredDate;
+        return UUID.nameUUIDFromBytes(semente.getBytes(StandardCharsets.UTF_8)).toString();
+    }
+
+    public String deveRetornarListagemVaziaQuandoNenhumClienteCorresponderAosFiltros() throws Exception {
+        mockMvc.perform(get("/api/clients")
+                        .queryParam("state", "XX")
+                        .queryParam("name", "inexistente"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").value(0))
+                .andExpect(jsonPath("$.data").isEmpty());
+        return null;
+    }
+
+    public String deveRetornarNotFoundQuandoBuscarClientePorIdInexistente() throws Exception {
+        String idInexistente = UUID.randomUUID().toString();
+
+        mockMvc.perform(get("/api/clients/{id}", idInexistente))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Cliente com ID " + idInexistente + " nao encontrado."));
+        return null;
+    }
+
+    public String deveRetornarBadRequestQuandoOParametroPageForMenorQue1() throws Exception {
+        mockMvc.perform(get("/api/clients")
+                        .queryParam("page", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("O parametro 'page' deve ser maior ou igual a 1."));
+        return null;
+    }
 }

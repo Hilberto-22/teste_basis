@@ -45,7 +45,7 @@ public class ClientService {
         List<ClientCardResponse> dados = clientesFiltrados.stream()
                 .skip((long) (paginaResolvida - 1) * limiteResolvido)
                 .limit(limiteResolvido)
-                .map(mapeadorRespostaCliente::paraRespostaCard)
+                .map(mapeadorRespostaCliente::respostaParaCard)
                 .toList();
 
         return new PageResponse<>(clientesFiltrados.size(), paginaResolvida, limiteResolvido, dados);
@@ -55,7 +55,7 @@ public class ClientService {
         var cliente = gatewayJsonCliente.buscarPorId(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
 
-        return mapeadorRespostaCliente.paraRespostaDetalhes(cliente);
+        return mapeadorRespostaCliente.respostaParaDetalhesClientes(cliente);
     }
     
     private void validarPaginacao(int page, int limit) {
@@ -68,9 +68,6 @@ public class ClientService {
         }
     }
 
-    /**
-     * Verifica se o estado do cliente atende ao filtro, aceitando nome completo ou sigla.
-     */
     private boolean correspondeEstado(Client client, String state) {
         if (!StringUtils.hasText(state)) {
             return true;
@@ -86,9 +83,6 @@ public class ClientService {
                 || siglaEstadoCliente.equalsIgnoreCase(state.trim());
     }
 
-    /**
-     * Verifica se o nome completo do cliente contem o termo informado apos normalizacao do texto.
-     */
     private boolean correspondeNome(Client client, String name) {
         if (!StringUtils.hasText(name)) {
             return true;

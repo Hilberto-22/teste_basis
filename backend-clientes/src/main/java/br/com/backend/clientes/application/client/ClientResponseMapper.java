@@ -12,7 +12,7 @@ import br.com.backend.clientes.support.TextUtils;
 @Component
 public class ClientResponseMapper {
 
-    public ClientCardResponse paraRespostaCard(Client client) {
+    public ClientCardResponse respostaParaCard(Client client) {
         return new ClientCardResponse(
                 client.getId(),
                 TextUtils.paraTitulo(client.getNomeCompleto()),
@@ -23,7 +23,7 @@ public class ClientResponseMapper {
                 client.getPicture() != null ? client.getPicture().getMedium() : null);
     }
 
-    public ClientDetailsResponse paraRespostaDetalhes(Client client) {
+    public ClientDetailsResponse respostaParaDetalhesClientes(Client client) {
         return new ClientDetailsResponse(
                 client.getId(),
                 TextUtils.paraTitulo(client.getNomeCompleto()),
@@ -43,32 +43,20 @@ public class ClientResponseMapper {
         return location == null ? "" : TextUtils.paraTitulo(location.getStreet());
     }
 
-    /**
-     * Formata o nome da cidade para apresentacao.
-     */
     private String formatarCidade(Location location) {
         return location == null ? "" : TextUtils.paraTitulo(location.getCity());
     }
 
-    /**
-     * Formata o nome do estado para apresentacao.
-     */
     private String formatarEstado(Location location) {
         return location == null ? "" : TextUtils.paraTitulo(location.getState());
     }
 
-    /**
-     * Converte o CEP em texto quando ele estiver presente na localizacao.
-     */
     private String formatarCep(Location location) {
         return location == null || location.getPostcode() == null
                 ? null
                 : String.valueOf(location.getPostcode());
     }
 
-    /**
-     * Resolve a sigla oficial do estado com base no nome informado na localizacao.
-     */
     private String resolverSiglaEstado(Location location) {
         if (location == null) {
             return null;

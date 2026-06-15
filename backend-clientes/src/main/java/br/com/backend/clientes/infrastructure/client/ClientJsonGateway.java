@@ -40,9 +40,6 @@ public class ClientJsonGateway {
         this.carregadorRecursos = carregadorRecursos;
     }
 
-    /**
-     * Carrega os clientes na inicializacao do componente e gera um ID estavel para cada item.
-     */
     @PostConstruct
     public void carregarClientes() {
         ClientApiResponse resposta = lerFonte();
@@ -87,17 +84,11 @@ public class ClientJsonGateway {
         }
     }
 
-    /**
-     * Verifica se o valor informado aponta para um recurso local suportado pelo Spring.
-     */
     private boolean ehLocalizacaoDeRecurso(String valor) {
         return StringUtils.hasText(valor)
                 && (valor.startsWith("classpath:") || valor.startsWith("file:"));
     }
 
-    /**
-     * Gera um UUID deterministico a partir de dados do cliente para manter o mesmo ID entre recargas.
-     */
     private void atribuirId(Client client) {
         String semente = client.getEmail() + "|" + client.getRegistered().getDate();
         String idGerado = UUID.nameUUIDFromBytes(semente.getBytes(StandardCharsets.UTF_8)).toString();
